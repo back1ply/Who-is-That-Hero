@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who is That Dota 2 Hero?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .score-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .image-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: filter 0.3s ease;
+        }
+
+        .hero-image.hidden {
+            filter: brightness(0) contrast(2);
+        }
+
+        .hero-image.revealed {
+            filter: none;
+        }
+
+        .choices-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .choice-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-transform: capitalize;
+        }
+
+        .choice-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .choice-btn.correct {
+            background: rgba(46, 213, 115, 0.3);
+            border-color: #2ed573;
+            animation: pulse 0.5s ease;
+        }
+
+        .choice-btn.incorrect {
+            background: rgba(255, 71, 87, 0.3);
+            border-color: #ff4757;
+            animation: shake 0.5s ease;
+        }
+
+        .choice-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .feedback {
+            text-align: center;
+            font-size: 1.5rem;
+            min-height: 40px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            color: #2ed573;
+        }
+
+        .feedback.incorrect {
+            color: #ff4757;
+        }
+
+        @media (max-width: 768px) {
+            .image-container {
+                width: 300px;
+                height: 300px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .choices-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 Who is That Dota 2 Hero?</h1>
+            <div class="score-board">
+                <div class="score-item">Score: <span id="score">0</span></div>
+                <div class="score-item">Round: <span id="round">1</span></div>
+                <div class="score-item">Streak: <span id="streak">0</span></div>
+            </div>
+        </header>
+
+        <div class="game-area">
+            <div class="image-container">
+                <img id="heroImage" class="hero-image hidden" src="" alt="Mystery Hero">
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <div class="choices-container" id="choices"></div>
+
+            <div class="controls">
+                <button class="btn" id="revealBtn">Reveal Answer</button>
+                <button class="btn" id="nextBtn" style="display: none;">Next Hero</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Hero list - excluding non-hero assets
+        const heroes = [
+            'abaddon', 'alchemist', 'ancient_apparition', 'anti-mage', 'arc_warden',
+            'axe', 'bane', 'batrider', 'beastmaster', 'bloodseeker', 'bounty_hunter',
+            'brewmaster', 'bristleback', 'broodmother', 'centaur_warrunner', 
+            'chaos_knight', 'chen', 'clinkz', 'clockwerk', 'crystal_maiden',
+            'dark_seer', 'dark_willow', 'dawnbreaker', 'dazzle', 'death_prophet',
+            'disruptor', 'doom', 'dragon_knight', 'drow_ranger', 'earthshaker',
+            'earth_spirit', 'elder_titan', 'ember_spirit', 'enchantress', 'enigma',
+            'faceless_void', 'grimstroke', 'gyrocopter', 'hoodwink', 'huskar',
+            'invoker', 'io', 'jakiro', 'juggernaut', 'keeper_of_the_light', 'kez',
+            'kunkka', 'legion_commander', 'leshrac', 'lich', 'lifestealer', 'lina',
+            'lion', 'lone_druid', 'luna', 'lycan', 'magnus', 'marci', 'mars',
+            'medusa', 'meepo', 'mirana', 'monkey_king', 'morphling', 'muerta',
+            'naga_siren', "nature's_prophet", 'necrophos', 'night_stalker', 
+            'nyx_assassin', 'ogre_magi', 'omniknight', 'oracle', 'outworld_destroyer',
+            'pangolier', 'phantom_assassin', 'phantom_lancer', 'phoenix', 
+            'primal_beast', 'puck', 'pudge', 'pugna', 'queen_of_pain', 'razor',
+            'riki', 'ringmaster', 'rubick', 'sand_king', 'shadow_demon', 
+            'shadow_fiend', 'shadow_shaman', 'silencer', 'skywrath_mage', 'slardar',
+            'slark', 'snapfire', 'sniper', 'spectre', 'spirit_breaker', 
+            'storm_spirit', 'sven', 'techies', 'templar_assassin', 'terrorblade',
+            'tidehunter', 'timbersaw', 'tinker', 'tiny', 'treant_protector',
+            'troll_warlord', 'tusk', 'underlord', 'undying', 'ursa', 
+            'vengeful_spirit', 'venomancer', 'viper', 'visage', 'void_spirit',
+            'warlock', 'weaver', 'windranger', 'winter_wyvern', 'witch_doctor',
+            'wraith_king', 'zeus'
+        ];
+
+        // Game state
+        let currentHero = '';
+        let score = 0;
+        let round = 1;
+        let streak = 0;
+        let answered = false;
+        let usedHeroes = [];
+
+        // DOM elements
+        const heroImage = document.getElementById('heroImage');
+        const choicesContainer = document.getElementById('choices');
+        const feedback = document.getElementById('feedback');
+        const revealBtn = document.getElementById('revealBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const scoreEl = document.getElementById('score');
+        const roundEl = document.getElementById('round');
+        const streakEl = document.getElementById('streak');
+
+        // Initialize game
+        function initGame() {
+            // Reset if all heroes used
+            if (usedHeroes.length === heroes.length) {
+                usedHeroes = [];
+            }
+
+            // Pick random unused hero
+            let availableHeroes = heroes.filter(h => !usedHeroes.includes(h));
+            currentHero = availableHeroes[Math.floor(Math.random() * availableHeroes.length)];
+            usedHeroes.push(currentHero);
+
+            // Load image from GitHub repo
+            const imageUrl = `https://raw.githubusercontent.com/back1ply/Who-is-That-Hero/main/Game%20Assets/${currentHero}.png`;
+            heroImage.src = imageUrl;
+            heroImage.className = 'hero-image hidden';
+
+            // Generate choices (1 correct + 3 random)
+            generateChoices();
+
+            // Reset UI
+            answered = false;
+            feedback.textContent = '';
+            feedback.className = 'feedback';
+            revealBtn.style.display = 'inline-block';
+            nextBtn.style.display = 'none';
+        }
+
+        function generateChoices() {
+            const choices = [currentHero];
+            
+            // Add 3 random wrong answers
+            while (choices.length < 4) {
+                const randomHero = heroes[Math.floor(Math.random() * heroes.length)];
+                if (!choices.includes(randomHero)) {
+                    choices.push(randomHero);
+                }
+            }
+
+            // Shuffle choices
+            choices.sort(() => Math.random() - 0.5);
+
+            // Create buttons
+            choicesContainer.innerHTML = '';
+            choices.forEach(hero => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.textContent = formatHeroName(hero);
+                btn.onclick = () => checkAnswer(hero, btn);
+                choicesContainer.appendChild(btn);
+            });
+        }
+
+        function formatHeroName(hero) {
+            return hero.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function checkAnswer(selectedHero, btn) {
+            if (answered) return;
+
+            answered = true;
+            const isCorrect = selectedHero === currentHero;
+
+            // Disable all buttons
+            document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                feedback.textContent = '✓ Correct!';
+                feedback.className = 'feedback correct';
+                score += 10;
+                streak++;
+                scoreEl.textContent = score;
+                streakEl.textContent = streak;
+            } else {
+                btn.classList.add('incorrect');
+                feedback.textContent = `✗ Wrong! It was ${formatHeroName(currentHero)}`;
+                feedback.className = 'feedback incorrect';
+                streak = 0;
+                streakEl.textContent = streak;
+                
+                // Highlight correct answer
+                document.querySelectorAll('.choice-btn').forEach(b => {
+                    if (b.textContent.toLowerCase().replace(/ /g, '_') === currentHero) {
+                        b.classList.add('correct');
+                    }
+                });
+            }
+
+            // Reveal image
+            heroImage.classList.remove('hidden');
+            heroImage.classList.add('revealed');
+
+            // Show next button
+            revealBtn.style.display = 'none';
+            nextBtn.style.display = 'inline-block';
+        }
+
+        function revealAnswer() {
+            if (answered) return;
+            
+            answered = true;
+            heroImage.classList.remove('hidden');
+            heroImage.classList.add('revealed');
+            
+            feedback.textContent = `It was ${formatHeroName(currentHero)}`;
+            feedback.className = 'feedback';
+            
+            streak = 0;
+            streakEl.textContent = streak;
+            
+            // Highlight correct answer
+            document.querySelectorAll('.choice-btn').forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent.toLowerCase().replace(/ /g, '_') === currentHero) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            revealBtn.style.display = 'none';
+            nextBtn.style.display = 'inline-block';
+        }
+
+        function nextRound() {
+            round++;
+            roundEl.textContent = round;
+            initGame();
+        }
+
+        // Event listeners
+        revealBtn.addEventListener('click', revealAnswer);
+        nextBtn.addEventListener('click', nextRound);
+
+        // Start game
+        initGame();
+    </script>
+</body>
+</html>

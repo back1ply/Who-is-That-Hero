@@ -77,10 +77,8 @@
         }
 
         .hero-image.hidden {
-            /* Lighter silhouette so the shape is visible but still hidden —
-               less aggressive than pure black. Adjust values if you want it
-               even lighter (increase brightness) or darker (reduce it). */
-            filter: brightness(0.25) contrast(1.5) saturate(0.8);
+            /* Create a dark silhouette effect with better contrast */
+            filter: brightness(0) contrast(2);
         }
 
         .hero-image.revealed {

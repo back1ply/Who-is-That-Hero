@@ -1,82 +1,161 @@
-# Who is That Dota 2 Hero? - Deployment Guide
+# Who is That Dota 2 Hero?
 
-## Quick Setup for GitHub Pages
+A browser-based guessing game where players identify Dota 2 heroes from their silhouettes. Features multiple-choice questions, hint system, and score tracking.
 
-### Option 1: Add to Existing Repo
-1. Copy `index.html` to the root of your `Who-is-That-Hero` repository
-2. Go to your repo Settings → Pages
-3. Under "Source", select "Deploy from a branch"
-4. Select `main` branch and `/ (root)` folder
-5. Click Save
-6. Your game will be live at: `https://back1ply.github.io/Who-is-That-Hero/`
+## Live Demo
 
-### Option 2: Create New Repo
-1. Create a new repository named `dota2-hero-game`
-2. Upload `index.html` to the root
-3. Follow steps 2-5 above
-4. Game will be at: `https://back1ply.github.io/dota2-hero-game/`
+Play the game at: `https://YOUR-USERNAME.github.io/Who-is-That-Hero/`
+
+(Replace `YOUR-USERNAME` with your GitHub username)
+
+## Features
+
+- **Silhouette Challenge**: Heroes appear as dark silhouettes until answered or revealed
+- **Multiple Choice**: 4 randomized options per round (1 correct + 3 decoys)
+- **Hint System**: Get attribute, role, and ability hints for each hero
+- **Score Tracking**: Points, rounds completed, and answer streak counter
+- **No Repeats**: All 123 heroes cycle through before any repeat
+- **Responsive Design**: Works on desktop, tablet, and mobile devices
+
+## Quick Setup
+
+### Deploy to GitHub Pages
+
+1. **If you already have the repo:**
+   - Ensure `index.html` is in the root directory
+   - Go to repo **Settings** → **Pages**
+   - Under "Source", select **Deploy from a branch**
+   - Choose `main` branch and `/ (root)` folder
+   - Click **Save**
+   - Game goes live at: `https://YOUR-USERNAME.github.io/Who-is-That-Hero/`
+
+2. **For a new deployment:**
+   - Fork or clone this repository
+   - Follow steps above
+   - Images load automatically from the Game Assets folder
 
 ## How It Works
 
-The game loads images directly from your existing GitHub repo using raw URLs:
+The game fetches hero images directly from your GitHub repository using raw URLs:
 ```
-https://raw.githubusercontent.com/back1ply/Who-is-That-Hero/main/Game%20Assets/[hero].png
+https://raw.githubusercontent.com/YOUR-USERNAME/Who-is-That-Hero/main/Game%20Assets/[hero].png
 ```
 
-**No external hosting needed** - everything runs client-side!
+Everything runs client-side in the browser - no server or external hosting required.
 
-## Game Features
+## Game Mechanics
 
-- **Multiple Choice**: 4 options per round (1 correct + 3 random)
-- **Score Tracking**: Points, rounds, and streak counter
-- **Silhouette Mode**: Images start completely black
-- **Reveal Option**: Can give up and see the answer
-- **No Repeats**: Heroes won't repeat until all have been shown
-- **Responsive**: Works on mobile and desktop
+### Scoring
+- **Correct answer**: +10 points, streak increases
+- **Wrong answer or reveal**: Streak resets to 0
+- Current implementation: No penalties, no time limits
 
-## Customization Options
+### Hero Pool
+The game uses **123 base heroes** from the complete Dota 2 roster. Excluded assets:
+- **Persona variants** (13): anti-mage_persona, crystal_maiden_persona, invoker_persona, phantom_assassin_persona, pudge_persona
+- **Non-heroes** (5): animal_courier, dire_creep, radiant_creep, roshan, tormentor
 
-### Change Number of Choices
+Total assets in repo: 136  
+Playable heroes: 123
+
+### Answer Selection
+- Choices are randomized each round
+- Wrong answers are randomly selected from the full hero pool
+- No duplicate options within a single round
+
+## Customization Guide
+
+### Adjust Number of Choices
 Edit line 252 in `index.html`:
 ```javascript
-while (choices.length < 4) {  // Change 4 to your desired number
+while (choices.length < 4) {  // Change to 3, 5, or 6
 ```
 
-### Adjust Points
+### Modify Points Per Correct Answer
 Edit line 306:
 ```javascript
-score += 10;  // Change points awarded
+score += 10;  // Change to your preferred value
 ```
 
-### Modify Difficulty
-Currently uses pure silhouette (brightness 0). To make easier, change line 65:
+### Change Silhouette Difficulty
+Edit line 65 in the CSS:
 ```css
-filter: brightness(0) contrast(2);  /* Change brightness(0) to brightness(0.2) for slight hint */
+filter: brightness(0) contrast(2);
+```
+- `brightness(0)` = complete silhouette (current)
+- `brightness(0.1)` = very dark with slight detail
+- `brightness(0.3)` = easier mode with visible features
+
+### Add/Remove Heroes
+Edit the `heroes` array starting at line 232:
+```javascript
+const heroes = [
+    'abaddon', 'alchemist', // ... add or remove here
+];
 ```
 
-## Known Limitations
+### Customize Hints
+Edit the `heroHints` object starting at line 241:
+```javascript
+const heroHints = {
+    'hero_name': 'Your custom hint text',
+};
+```
 
-1. **Persona variants excluded**: The game uses base heroes only (anti-mage, not anti-mage_persona)
-2. **Non-heroes excluded**: Filtered out: animal_courier, dire_creep, radiant_creep, roshan, tormentor
-3. **Image dependency**: Requires your Game Assets folder to remain public
-4. **No progressive reveal**: Currently binary (hidden/revealed) - could add gradual brightness increase
+## Technical Details
 
-## Potential Issues
+### Browser Compatibility
+- Modern browsers (Chrome, Firefox, Safari, Edge)
+- Mobile browsers (iOS Safari, Chrome Mobile)
+- Requires JavaScript enabled
 
-⚠️ **CORS / Image Loading**: If images don't load, verify:
-- Repo is public
-- File names match exactly (case-sensitive)
-- Images are in `main` branch under `Game Assets/` folder
+### Image Requirements
+- Format: PNG with transparent backgrounds work best
+- Location: `/Game Assets/` folder in the repository
+- Naming: Must match hero names in the code (case-sensitive, underscores not hyphens)
 
-⚠️ **Persona Heroes**: Currently treats personas as separate from base heroes. If you want them included as alternate skins, the code needs modification.
+### No External Dependencies
+- Pure HTML/CSS/JavaScript
+- No frameworks or libraries required
+- No build process needed
 
-## Questions to Clarify
+## Potential Improvements
 
-1. **Should persona variants be playable?** (currently excluded)
-2. **Do you want progressive reveal?** (image gets brighter with each wrong guess)
-3. **Any specific scoring system?** (timer-based? difficulty tiers?)
-4. **Should non-hero assets be included?** (Roshan, creeps, couriers?)
+### Current Limitations
+1. **Binary reveal**: Image goes from hidden to fully visible instantly
+2. **No difficulty scaling**: All heroes treated equally
+3. **Static hints**: Hints don't adapt to player skill level
+4. **No leaderboard**: Scores reset on page refresh
 
-## License
+### Ideas for Enhancement
+- **Progressive reveal**: Image becomes clearer with each wrong guess
+- **Difficulty tiers**: Easy (common heroes) → Medium → Hard (rarely picked)
+- **Timer mode**: Bonus points for faster answers
+- **Local storage**: Save high scores and statistics
+- **Include personas**: Add toggle to play with alternate skins
+- **Sound effects**: Audio feedback for correct/wrong answers
+- **Achievement system**: Unlock badges for streaks, perfect games, etc.
 
-This is a fan project using Dota 2 assets. Dota 2 is © Valve Corporation.
+## Known Issues
+
+### Image Loading
+If images fail to load, verify:
+1. Repository is **public**
+2. Images exist in `main` branch under `Game Assets/` folder
+3. File names match exactly (including underscores vs hyphens)
+4. No CORS restrictions (GitHub raw content should work by default)
+
+### Case Sensitivity
+Hero names in code must match image filenames exactly:
+- ✅ `nature's_prophet.png` → `"nature's_prophet"`
+- ❌ `Nature's_Prophet.png` → `"nature's_prophet"` (will fail)
+
+## License & Attribution
+
+This is an unofficial fan project. All Dota 2 assets and character names are © Valve Corporation.
+
+The game code itself is provided as-is for educational and entertainment purposes.
+
+## Questions or Contributions
+
+For issues or suggestions, please open an issue on the GitHub repository.

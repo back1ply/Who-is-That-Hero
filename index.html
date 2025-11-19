@@ -29,12 +29,12 @@
 
         header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
 
         h1 {
             font-size: 2.5rem;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
@@ -42,7 +42,7 @@
             display: flex;
             justify-content: center;
             gap: 30px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             font-size: 1.2rem;
         }
 
@@ -56,7 +56,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 30px;
+            gap: 35px;
         }
 
         .image-container {
@@ -67,6 +67,7 @@
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 3px solid rgba(255, 255, 255, 0.2);
         }
 
         .hero-image {
@@ -87,22 +88,24 @@
 
         .choices-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
             width: 100%;
-            max-width: 800px;
+            max-width: 600px;
         }
 
         .choice-btn {
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.3);
             color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 18px 24px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            font-weight: 500;
             transition: all 0.3s ease;
             text-transform: capitalize;
+            min-height: 60px;
         }
 
         .choice-btn:hover {
@@ -142,17 +145,17 @@
         .controls {
             display: flex;
             gap: 15px;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
             color: white;
-            padding: 12px 30px;
-            border-radius: 8px;
+            padding: 14px 32px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: bold;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -170,8 +173,7 @@
         .feedback {
             text-align: center;
             font-size: 1.5rem;
-            min-height: 40px;
-            margin-top: 20px;
+            min-height: 35px;
             font-weight: bold;
         }
 
@@ -183,18 +185,101 @@
             color: #ff4757;
         }
 
+        .hint-container {
+            text-align: center;
+            min-height: 30px;
+            margin-top: 10px;
+        }
+
+        .hint-text {
+            background: rgba(255, 193, 7, 0.2);
+            border: 2px solid rgba(255, 193, 7, 0.5);
+            color: #ffc107;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            display: inline-block;
+        }
+
+        .hint-btn {
+            background: rgba(255, 193, 7, 0.2);
+            border: 2px solid rgba(255, 193, 7, 0.4);
+            color: #ffc107;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .hint-btn:hover {
+            background: rgba(255, 193, 7, 0.3);
+            border-color: rgba(255, 193, 7, 0.6);
+        }
+
+        .hint-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
             .image-container {
-                width: 300px;
-                height: 300px;
+                width: 320px;
+                height: 320px;
             }
 
             h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
+            }
+
+            .score-board {
+                gap: 15px;
+                font-size: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .score-item {
+                padding: 8px 15px;
             }
 
             .choices-container {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
+                gap: 12px;
+                max-width: 320px;
+            }
+
+            .choice-btn {
+                padding: 16px 20px;
+                font-size: 1rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .image-container {
+                width: 280px;
+                height: 280px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .game-area {
+                gap: 25px;
             }
         }
     </style>
@@ -216,6 +301,11 @@
             </div>
 
             <div class="feedback" id="feedback"></div>
+
+            <div class="hint-container">
+                <button class="hint-btn" id="hintBtn">💡 Get Hint</button>
+                <div id="hintText" style="display: none;"></div>
+            </div>
 
             <div class="choices-container" id="choices"></div>
 
@@ -264,12 +354,144 @@
         let answered = false;
         let usedHeroes = [];
 
+        // Hero hints database
+        const heroHints = {
+            'abaddon': 'Attribute: Strength | Role: Support/Carry',
+            'alchemist': 'Attribute: Strength | Role: Carry | Hint: Greedy farmer',
+            'ancient_apparition': 'Attribute: Intelligence | Role: Support | Hint: Ice magic',
+            'anti-mage': 'Attribute: Agility | Role: Carry | Hint: Magic hater',
+            'arc_warden': 'Attribute: Agility | Role: Carry | Hint: Creates a copy',
+            'axe': 'Attribute: Strength | Role: Initiator | Hint: Spins to win',
+            'bane': 'Attribute: Intelligence | Role: Support | Hint: Nightmare',
+            'batrider': 'Attribute: Intelligence | Role: Initiator | Hint: Rides a bat',
+            'beastmaster': 'Attribute: Strength | Role: Initiator | Hint: Controls animals',
+            'bloodseeker': 'Attribute: Agility | Role: Carry | Hint: Smells blood',
+            'bounty_hunter': 'Attribute: Agility | Role: Support | Hint: Tracks enemies',
+            'brewmaster': 'Attribute: Strength | Role: Initiator | Hint: Drunk fighter',
+            'bristleback': 'Attribute: Strength | Role: Carry | Hint: Turn your back',
+            'broodmother': 'Attribute: Agility | Role: Carry | Hint: Spider queen',
+            'centaur_warrunner': 'Attribute: Strength | Role: Initiator | Hint: Half horse',
+            'chaos_knight': 'Attribute: Strength | Role: Carry | Hint: Reality rift',
+            'chen': 'Attribute: Intelligence | Role: Support | Hint: Holy persuasion',
+            'clinkz': 'Attribute: Agility | Role: Carry | Hint: Burning archer',
+            'clockwerk': 'Attribute: Strength | Role: Initiator | Hint: Mechanical hero',
+            'crystal_maiden': 'Attribute: Intelligence | Role: Support | Hint: Freezing field',
+            'dark_seer': 'Attribute: Intelligence | Role: Initiator | Hint: Vacuum ability',
+            'dark_willow': 'Attribute: Intelligence | Role: Support | Hint: Fairy magic',
+            'dawnbreaker': 'Attribute: Strength | Role: Support | Hint: Solar guardian',
+            'dazzle': 'Attribute: Intelligence | Role: Support | Hint: Shallow grave',
+            'death_prophet': 'Attribute: Intelligence | Role: Carry | Hint: Ghost swarm',
+            'disruptor': 'Attribute: Intelligence | Role: Support | Hint: Storm rider',
+            'doom': 'Attribute: Strength | Role: Carry | Hint: Silences with ult',
+            'dragon_knight': 'Attribute: Strength | Role: Carry | Hint: Transforms into dragon',
+            'drow_ranger': 'Attribute: Agility | Role: Carry | Hint: Frost arrows',
+            'earthshaker': 'Attribute: Strength | Role: Initiator | Hint: Echo slam',
+            'earth_spirit': 'Attribute: Strength | Role: Initiator | Hint: Rolling boulder',
+            'elder_titan': 'Attribute: Strength | Role: Initiator | Hint: Astral spirit',
+            'ember_spirit': 'Attribute: Agility | Role: Carry | Hint: Fire remnants',
+            'enchantress': 'Attribute: Intelligence | Role: Support | Hint: Befriends creeps',
+            'enigma': 'Attribute: Intelligence | Role: Initiator | Hint: Black hole',
+            'faceless_void': 'Attribute: Agility | Role: Carry | Hint: Time walker',
+            'grimstroke': 'Attribute: Intelligence | Role: Support | Hint: Ink magic',
+            'gyrocopter': 'Attribute: Agility | Role: Carry | Hint: Flying machine',
+            'hoodwink': 'Attribute: Agility | Role: Support | Hint: Squirrel archer',
+            'huskar': 'Attribute: Strength | Role: Carry | Hint: Burning spears',
+            'invoker': 'Attribute: Intelligence | Role: Carry | Hint: 10 spells',
+            'io': 'Attribute: Strength | Role: Support | Hint: Wisp',
+            'jakiro': 'Attribute: Intelligence | Role: Support | Hint: Two-headed dragon',
+            'juggernaut': 'Attribute: Agility | Role: Carry | Hint: Blade fury',
+            'keeper_of_the_light': 'Attribute: Intelligence | Role: Support | Hint: Light bringer',
+            'kez': 'Attribute: Agility | Role: Carry | Hint: Dual weapon master',
+            'kunkka': 'Attribute: Strength | Role: Carry | Hint: Admiral',
+            'legion_commander': 'Attribute: Strength | Role: Carry | Hint: Duel master',
+            'leshrac': 'Attribute: Intelligence | Role: Carry | Hint: Lightning storm',
+            'lich': 'Attribute: Intelligence | Role: Support | Hint: Chain frost',
+            'lifestealer': 'Attribute: Strength | Role: Carry | Hint: Infests units',
+            'lina': 'Attribute: Intelligence | Role: Carry | Hint: Fire queen',
+            'lion': 'Attribute: Intelligence | Role: Support | Hint: Finger of death',
+            'lone_druid': 'Attribute: Agility | Role: Carry | Hint: Has a bear',
+            'luna': 'Attribute: Agility | Role: Carry | Hint: Moon rider',
+            'lycan': 'Attribute: Strength | Role: Carry | Hint: Werewolf',
+            'magnus': 'Attribute: Strength | Role: Initiator | Hint: Rhino warrior',
+            'marci': 'Attribute: Strength | Role: Carry | Hint: Silent fighter',
+            'mars': 'Attribute: Strength | Role: Initiator | Hint: God of war',
+            'medusa': 'Attribute: Agility | Role: Carry | Hint: Stone gaze',
+            'meepo': 'Attribute: Agility | Role: Carry | Hint: Multiple clones',
+            'mirana': 'Attribute: Agility | Role: Carry | Hint: Rides a tiger',
+            'monkey_king': 'Attribute: Agility | Role: Carry | Hint: Staff wielder',
+            'morphling': 'Attribute: Agility | Role: Carry | Hint: Water elemental',
+            'muerta': 'Attribute: Agility | Role: Carry | Hint: Gunslinger',
+            'naga_siren': 'Attribute: Agility | Role: Carry | Hint: Song puts to sleep',
+            "nature's_prophet": 'Attribute: Intelligence | Role: Carry | Hint: Teleports anywhere',
+            'necrophos': 'Attribute: Intelligence | Role: Carry | Hint: Death pulse',
+            'night_stalker': 'Attribute: Strength | Role: Initiator | Hint: Stronger at night',
+            'nyx_assassin': 'Attribute: Agility | Role: Initiator | Hint: Spiked carapace',
+            'ogre_magi': 'Attribute: Intelligence | Role: Support | Hint: Two-headed caster',
+            'omniknight': 'Attribute: Strength | Role: Support | Hint: Holy protector',
+            'oracle': 'Attribute: Intelligence | Role: Support | Hint: False promise',
+            'outworld_destroyer': 'Attribute: Intelligence | Role: Carry | Hint: Astral imprisonment',
+            'pangolier': 'Attribute: Agility | Role: Initiator | Hint: Rolls into ball',
+            'phantom_assassin': 'Attribute: Agility | Role: Carry | Hint: Critical strikes',
+            'phantom_lancer': 'Attribute: Agility | Role: Carry | Hint: Many illusions',
+            'phoenix': 'Attribute: Strength | Role: Initiator | Hint: Sun ray',
+            'primal_beast': 'Attribute: Strength | Role: Initiator | Hint: Charges enemies',
+            'puck': 'Attribute: Intelligence | Role: Initiator | Hint: Phase shift',
+            'pudge': 'Attribute: Strength | Role: Initiator | Hint: Meat hook',
+            'pugna': 'Attribute: Intelligence | Role: Carry | Hint: Life drain',
+            'queen_of_pain': 'Attribute: Intelligence | Role: Carry | Hint: Sonic scream',
+            'razor': 'Attribute: Agility | Role: Carry | Hint: Static link',
+            'riki': 'Attribute: Agility | Role: Carry | Hint: Permanent invisibility',
+            'ringmaster': 'Attribute: Intelligence | Role: Support | Hint: Circus performer',
+            'rubick': 'Attribute: Intelligence | Role: Support | Hint: Spell steal',
+            'sand_king': 'Attribute: Strength | Role: Initiator | Hint: Epicenter',
+            'shadow_demon': 'Attribute: Intelligence | Role: Support | Hint: Creates illusions',
+            'shadow_fiend': 'Attribute: Agility | Role: Carry | Hint: Soul collector',
+            'shadow_shaman': 'Attribute: Intelligence | Role: Support | Hint: Hex and shackles',
+            'silencer': 'Attribute: Intelligence | Role: Carry | Hint: Global silence',
+            'skywrath_mage': 'Attribute: Intelligence | Role: Support | Hint: Mystic flare',
+            'slardar': 'Attribute: Strength | Role: Initiator | Hint: Amplify damage',
+            'slark': 'Attribute: Agility | Role: Carry | Hint: Shadow dance',
+            'snapfire': 'Attribute: Strength | Role: Support | Hint: Rides a lizard',
+            'sniper': 'Attribute: Agility | Role: Carry | Hint: Long range',
+            'spectre': 'Attribute: Agility | Role: Carry | Hint: Haunts all enemies',
+            'spirit_breaker': 'Attribute: Strength | Role: Initiator | Hint: Charge of darkness',
+            'storm_spirit': 'Attribute: Intelligence | Role: Carry | Hint: Ball lightning',
+            'sven': 'Attribute: Strength | Role: Carry | Hint: God strength',
+            'techies': 'Attribute: Intelligence | Role: Support | Hint: Mines',
+            'templar_assassin': 'Attribute: Agility | Role: Carry | Hint: Refraction',
+            'terrorblade': 'Attribute: Agility | Role: Carry | Hint: Demon marauder',
+            'tidehunter': 'Attribute: Strength | Role: Initiator | Hint: Ravage',
+            'timbersaw': 'Attribute: Strength | Role: Carry | Hint: Timber chain',
+            'tinker': 'Attribute: Intelligence | Role: Carry | Hint: Rearms items',
+            'tiny': 'Attribute: Strength | Role: Carry | Hint: Grows bigger',
+            'treant_protector': 'Attribute: Strength | Role: Support | Hint: Tree guardian',
+            'troll_warlord': 'Attribute: Agility | Role: Carry | Hint: Switches axes/melee',
+            'tusk': 'Attribute: Strength | Role: Initiator | Hint: Ice shards',
+            'underlord': 'Attribute: Strength | Role: Support | Hint: Dark rift',
+            'undying': 'Attribute: Strength | Role: Support | Hint: Tombstone',
+            'ursa': 'Attribute: Agility | Role: Carry | Hint: Bear warrior',
+            'vengeful_spirit': 'Attribute: Agility | Role: Support | Hint: Swaps positions',
+            'venomancer': 'Attribute: Agility | Role: Support | Hint: Poison wards',
+            'viper': 'Attribute: Agility | Role: Carry | Hint: Poison attack',
+            'visage': 'Attribute: Intelligence | Role: Support | Hint: Stone familiars',
+            'void_spirit': 'Attribute: Intelligence | Role: Carry | Hint: Void walker',
+            'warlock': 'Attribute: Intelligence | Role: Support | Hint: Summons golem',
+            'weaver': 'Attribute: Agility | Role: Carry | Hint: Time lapse',
+            'windranger': 'Attribute: Intelligence | Role: Carry | Hint: Shackleshot',
+            'winter_wyvern': 'Attribute: Intelligence | Role: Support | Hint: Ice dragon',
+            'witch_doctor': 'Attribute: Intelligence | Role: Support | Hint: Death ward',
+            'wraith_king': 'Attribute: Strength | Role: Carry | Hint: Reincarnation',
+            'zeus': 'Attribute: Intelligence | Role: Carry | Hint: Thunder god'
+        };
+
         // DOM elements
         const heroImage = document.getElementById('heroImage');
         const choicesContainer = document.getElementById('choices');
         const feedback = document.getElementById('feedback');
         const revealBtn = document.getElementById('revealBtn');
         const nextBtn = document.getElementById('nextBtn');
+        const hintBtn = document.getElementById('hintBtn');
+        const hintText = document.getElementById('hintText');
         const scoreEl = document.getElementById('score');
         const roundEl = document.getElementById('round');
         const streakEl = document.getElementById('streak');
@@ -300,6 +522,10 @@
             feedback.className = 'feedback';
             revealBtn.style.display = 'inline-block';
             nextBtn.style.display = 'none';
+            hintBtn.style.display = 'inline-block';
+            hintBtn.disabled = false;
+            hintText.style.display = 'none';
+            hintText.className = '';
         }
 
         function generateChoices() {
@@ -403,9 +629,18 @@
             initGame();
         }
 
+        function showHint() {
+            const hint = heroHints[currentHero] || 'No hint available';
+            hintText.textContent = hint;
+            hintText.className = 'hint-text';
+            hintText.style.display = 'inline-block';
+            hintBtn.style.display = 'none';
+        }
+
         // Event listeners
         revealBtn.addEventListener('click', revealAnswer);
         nextBtn.addEventListener('click', nextRound);
+        hintBtn.addEventListener('click', showHint);
 
         // Start game
         initGame();

@@ -16,17 +16,21 @@ let currentDifficulty = 'easy';
 
 /**
  * Initialize or reset the game for a new round
+ * @param {boolean} keepCurrentHero - If true, keeps the current hero (used when changing difficulty)
  */
-function initGame() {
-    // Reset if all heroes used
-    if (usedHeroes.length === heroes.length) {
-        usedHeroes = [];
-    }
+function initGame(keepCurrentHero = false) {
+    // Only pick a new hero if not keeping the current one
+    if (!keepCurrentHero) {
+        // Reset if all heroes used
+        if (usedHeroes.length === heroes.length) {
+            usedHeroes = [];
+        }
 
-    // Pick random unused hero
-    let availableHeroes = heroes.filter(h => !usedHeroes.includes(h));
-    currentHero = availableHeroes[Math.floor(Math.random() * availableHeroes.length)];
-    usedHeroes.push(currentHero);
+        // Pick random unused hero
+        let availableHeroes = heroes.filter(h => !usedHeroes.includes(h));
+        currentHero = availableHeroes[Math.floor(Math.random() * availableHeroes.length)];
+        usedHeroes.push(currentHero);
+    }
 
     // Load image from GitHub repo
     const imageUrl = `https://raw.githubusercontent.com/back1ply/Who-is-That-Hero/main/Game%20Assets/${currentHero}.png`;
@@ -244,6 +248,6 @@ function setDifficulty(difficulty) {
         }
     });
 
-    // Restart current round with new difficulty
-    initGame();
+    // Restart current round with new difficulty, keeping the same hero (backdoor cheat!)
+    initGame(true);
 }

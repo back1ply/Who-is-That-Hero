@@ -82,6 +82,11 @@
             filter: brightness(0) contrast(2);
         }
 
+        .hero-image.black-silhouette {
+            /* Completely black silhouette for harder difficulties */
+            filter: brightness(0) saturate(0) contrast(100);
+        }
+
         .hero-image.revealed {
             filter: none;
         }
@@ -282,12 +287,139 @@
                 gap: 25px;
             }
         }
+
+        .difficulty-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .difficulty-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .difficulty-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .text-input-container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 600px;
+            flex-direction: column;
+        }
+
+        .text-input-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        .hero-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 18px 24px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .hero-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .hero-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 18px 32px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @media (max-width: 768px) {
+            .difficulty-selector {
+                gap: 8px;
+            }
+
+            .difficulty-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+                min-width: 80px;
+            }
+
+            .text-input-wrapper {
+                flex-direction: column;
+            }
+
+            .hero-input {
+                padding: 16px 20px;
+                font-size: 1rem;
+            }
+
+            .submit-btn {
+                width: 100%;
+                padding: 16px 24px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>🎮 Who is That Dota 2 Hero?</h1>
+            
+            <div class="difficulty-selector">
+                <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
+                <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+                <button class="difficulty-btn" data-difficulty="medium-hard">Medium Hard</button>
+                <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+            </div>
+
             <div class="score-board">
                 <div class="score-item">Score: <span id="score">0</span></div>
                 <div class="score-item">Round: <span id="round">1</span></div>
@@ -308,6 +440,13 @@
             </div>
 
             <div class="choices-container" id="choices"></div>
+
+            <div class="text-input-container" id="textInputContainer" style="display: none;">
+                <div class="text-input-wrapper">
+                    <input type="text" id="heroInput" class="hero-input" placeholder="Type hero name..." autocomplete="off">
+                    <button class="submit-btn" id="submitBtn">Submit</button>
+                </div>
+            </div>
 
             <div class="controls">
                 <button class="btn" id="revealBtn">Reveal Answer</button>
@@ -353,6 +492,7 @@
         let streak = 0;
         let answered = false;
         let usedHeroes = [];
+        let currentDifficulty = 'easy';
 
         // Hero hints database
         const heroHints = {
@@ -487,6 +627,9 @@
         // DOM elements
         const heroImage = document.getElementById('heroImage');
         const choicesContainer = document.getElementById('choices');
+        const textInputContainer = document.getElementById('textInputContainer');
+        const heroInput = document.getElementById('heroInput');
+        const submitBtn = document.getElementById('submitBtn');
         const feedback = document.getElementById('feedback');
         const revealBtn = document.getElementById('revealBtn');
         const nextBtn = document.getElementById('nextBtn');
@@ -495,6 +638,7 @@
         const scoreEl = document.getElementById('score');
         const roundEl = document.getElementById('round');
         const streakEl = document.getElementById('streak');
+        const difficultyBtns = document.querySelectorAll('.difficulty-btn');
 
         // Initialize game
         function initGame() {
@@ -511,10 +655,26 @@
             // Load image from GitHub repo
             const imageUrl = `https://raw.githubusercontent.com/back1ply/Who-is-That-Hero/main/Game%20Assets/${currentHero}.png`;
             heroImage.src = imageUrl;
-            heroImage.className = 'hero-image hidden';
+            
+            // Apply correct silhouette based on difficulty
+            if (currentDifficulty === 'medium' || currentDifficulty === 'hard') {
+                heroImage.className = 'hero-image black-silhouette';
+            } else {
+                heroImage.className = 'hero-image hidden';
+            }
 
-            // Generate choices (1 correct + 3 random)
-            generateChoices();
+            // Show appropriate input method based on difficulty
+            if (currentDifficulty === 'easy' || currentDifficulty === 'medium') {
+                choicesContainer.style.display = 'grid';
+                textInputContainer.style.display = 'none';
+                generateChoices();
+            } else {
+                choicesContainer.style.display = 'none';
+                textInputContainer.style.display = 'flex';
+                heroInput.value = '';
+                heroInput.disabled = false;
+                submitBtn.disabled = false;
+            }
 
             // Reset UI
             answered = false;
@@ -590,7 +750,49 @@
             }
 
             // Reveal image
-            heroImage.classList.remove('hidden');
+            heroImage.classList.remove('hidden', 'black-silhouette');
+            heroImage.classList.add('revealed');
+
+            // Show next button
+            revealBtn.style.display = 'none';
+            nextBtn.style.display = 'inline-block';
+        }
+
+        function checkTextAnswer() {
+            if (answered) return;
+
+            const userInput = heroInput.value.trim().toLowerCase();
+            if (!userInput) return;
+
+            answered = true;
+            heroInput.disabled = true;
+            submitBtn.disabled = true;
+
+            // Normalize hero name for comparison
+            const normalizedInput = userInput.replace(/[\s-]/g, '_');
+            const normalizedHero = currentHero.replace(/[\s-]/g, '_');
+            
+            // Check for exact match or if input is contained in hero name
+            const isCorrect = normalizedInput === normalizedHero || 
+                             normalizedHero.includes(normalizedInput) ||
+                             formatHeroName(currentHero).toLowerCase().includes(userInput);
+
+            if (isCorrect) {
+                feedback.textContent = '✓ Correct!';
+                feedback.className = 'feedback correct';
+                score += 10;
+                streak++;
+                scoreEl.textContent = score;
+                streakEl.textContent = streak;
+            } else {
+                feedback.textContent = `✗ Wrong! It was ${formatHeroName(currentHero)}`;
+                feedback.className = 'feedback incorrect';
+                streak = 0;
+                streakEl.textContent = streak;
+            }
+
+            // Reveal image
+            heroImage.classList.remove('hidden', 'black-silhouette');
             heroImage.classList.add('revealed');
 
             // Show next button
@@ -602,7 +804,7 @@
             if (answered) return;
             
             answered = true;
-            heroImage.classList.remove('hidden');
+            heroImage.classList.remove('hidden', 'black-silhouette');
             heroImage.classList.add('revealed');
             
             feedback.textContent = `It was ${formatHeroName(currentHero)}`;
@@ -637,10 +839,39 @@
             hintBtn.style.display = 'none';
         }
 
+        function setDifficulty(difficulty) {
+            currentDifficulty = difficulty;
+            
+            // Update button states
+            difficultyBtns.forEach(btn => {
+                if (btn.dataset.difficulty === difficulty) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // Restart current round with new difficulty
+            initGame();
+        }
+
         // Event listeners
         revealBtn.addEventListener('click', revealAnswer);
         nextBtn.addEventListener('click', nextRound);
         hintBtn.addEventListener('click', showHint);
+        submitBtn.addEventListener('click', checkTextAnswer);
+        heroInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                checkTextAnswer();
+            }
+        });
+        
+        // Difficulty selector listeners
+        difficultyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                setDifficulty(btn.dataset.difficulty);
+            });
+        });
 
         // Start game
         initGame();

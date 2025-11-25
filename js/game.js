@@ -30,11 +30,11 @@ function initGame(keepCurrentHero = false) {
         let availableHeroes = heroes.filter(h => !usedHeroes.includes(h));
         currentHero = availableHeroes[Math.floor(Math.random() * availableHeroes.length)];
         usedHeroes.push(currentHero);
-    }
 
-    // Load image from GitHub repo
-    const imageUrl = `https://raw.githubusercontent.com/back1ply/Who-is-That-Hero/main/Game%20Assets/${currentHero}.png`;
-    heroImage.src = imageUrl;
+        // Load image from GitHub repo only when picking a new hero
+        const imageUrl = `https://raw.githubusercontent.com/back1ply/Who-is-That-Hero/main/Game%20Assets/${currentHero}.png`;
+        heroImage.src = imageUrl;
+    }
 
     // Apply correct silhouette based on difficulty
     if (currentDifficulty === 'medium' || currentDifficulty === 'hard') {

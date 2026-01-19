@@ -255,6 +255,32 @@ body::before {
     font-weight: var(--font-bold);
 }
 
+.footer__github {
+    color: var(--color-text-secondary);
+    transition: color var(--transition-fast);
+}
+
+.footer__github:hover {
+    color: var(--color-neon-cyan);
+}
+
+/* Mobile GitHub link (floating bottom corner) */
+.github-mobile {
+    display: none;
+    position: fixed;
+    bottom: var(--space-3);
+    right: var(--space-3);
+    color: var(--color-text-muted);
+    opacity: 0.6;
+    transition: opacity var(--transition-fast), color var(--transition-fast);
+    z-index: var(--z-fixed);
+}
+
+.github-mobile:hover {
+    opacity: 1;
+    color: var(--color-neon-cyan);
+}
+
 /* ===================================
    Responsive - Tablet
    =================================== */
@@ -397,6 +423,11 @@ body::before {
     /* Hide fixed footer on mobile - replaced by inline stats */
     .footer {
         display: none;
+    }
+
+    /* Show floating GitHub link on mobile */
+    .github-mobile {
+        display: block;
     }
 
     /* Inline stats (visible on mobile only) */

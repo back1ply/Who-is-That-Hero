@@ -4,15 +4,13 @@ A Dota 2 hero identification quiz game with an esports-inspired UI. Test your kn
 
 ## Live Demo
 
-Play the game at: `https://YOUR-USERNAME.github.io/Who-is-That-Hero/`
-
-(Replace `YOUR-USERNAME` with your GitHub username)
+Play the game at: https://back1ply.github.io/Who-is-That-Hero/
 
 ## Features
 
 - **Esports UI Design**: Cyberpunk-inspired dark theme with neon accents and HUD elements
-- **4 Difficulty Levels**: Easy, Medium, Medium-Hard (multiple choice), and Hard (text input)
-- **Silhouette Challenge**: Heroes appear as dark silhouettes until answered or revealed
+- **3 Difficulty Levels**: Easy (detailed silhouette), Medium (solid black), Hard (solid + text input)
+- **Silhouette Challenge**: Heroes appear as silhouettes until answered or revealed
 - **Hint System**: Get attribute, role, and ability hints for each hero
 - **Persistent Stats**: High score and accuracy tracking saved to localStorage
 - **No Repeats**: All 123 heroes cycle through before any repeat
@@ -33,7 +31,7 @@ Play the game at: `https://YOUR-USERNAME.github.io/Who-is-That-Hero/`
 ## How to Play
 
 1. A hero silhouette appears on screen
-2. Select the correct hero from 4 choices (Easy/Medium/Med-Hard) or type the name (Hard)
+2. Select the correct hero from 4 choices (Easy/Medium) or type the name (Hard)
 3. Use hints if you're stuck
 4. Build your streak for bragging rights
 5. Try to beat your high score!
@@ -51,10 +49,9 @@ Play the game at: `https://YOUR-USERNAME.github.io/Who-is-That-Hero/`
 
 | Level | Image | Input Method |
 |-------|-------|--------------|
-| Easy | Hidden (dark) | Multiple choice |
-| Medium | Silhouette | Multiple choice |
-| Med-Hard | Silhouette | Multiple choice |
-| Hard | Silhouette | Type hero name |
+| Easy | Detailed silhouette (inner structure visible) | Multiple choice |
+| Medium | Solid black silhouette | Multiple choice |
+| Hard | Solid black silhouette | Type hero name |
 
 ## Project Structure
 
@@ -117,12 +114,14 @@ const CONFIG = {
 
 Edit `css/components.css`:
 ```css
-.hero-frame__image--hidden {
-    filter: brightness(0) contrast(1.5);  /* Easy mode */
+/* Easy: detailed silhouette with visible inner structure */
+.hero-frame__image--silhouette-detailed {
+    filter: brightness(0.12) saturate(0) contrast(3);
 }
 
-.hero-frame__image--silhouette {
-    filter: brightness(0) saturate(0) contrast(100);  /* Hard mode */
+/* Medium/Hard: solid black silhouette */
+.hero-frame__image--silhouette-solid {
+    filter: brightness(0) drop-shadow(0 0 1px black);
 }
 ```
 

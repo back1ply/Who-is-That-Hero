@@ -1,48 +1,10 @@
 /* ===================================
-   CSS Custom Properties & Variables
-   =================================== */
-
-:root {
-    /* Color System */
-    --color-bg-primary: hsl(230, 35%, 12%);
-    --color-bg-secondary: hsl(220, 30%, 15%);
-    --color-accent-primary: hsl(250, 75%, 65%);
-    --color-accent-secondary: hsl(280, 70%, 60%);
-    --color-success: hsl(145, 65%, 55%);
-    --color-error: hsl(355, 75%, 60%);
-    --color-warning: hsl(45, 95%, 55%);
-    --color-text-primary: hsl(0, 0%, 98%);
-    --color-text-secondary: hsl(0, 0%, 75%);
-
-    /* Glass Effects */
-    --glass-bg: rgba(255, 255, 255, 0.08);
-    --glass-border: rgba(255, 255, 255, 0.18);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-
-    /* Spacing */
-    --spacing-xs: 8px;
-    --spacing-sm: 12px;
-    --spacing-md: 20px;
-    --spacing-lg: 32px;
-    --spacing-xl: 48px;
-
-    /* Border Radius */
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 24px;
-
-    /* Transitions */
-    --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ===================================
    CSS Reset & Base Styles
    =================================== */
 
-* {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -50,148 +12,148 @@
 
 html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
-    background-attachment: fixed;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: var(--font-normal);
+    line-height: 1.6;
     color: var(--color-text-primary);
+    background: var(--color-bg-primary);
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: var(--spacing-md);
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-body::before {
-    content: '';
-    position: fixed;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
-    animation: float 20s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 0;
+/* === Typography === */
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: var(--font-bold);
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
 }
 
-/* Prevent text selection on buttons */
+h1 {
+    font-size: clamp(var(--text-2xl), 5vw, var(--text-4xl));
+}
+
+h2 {
+    font-size: clamp(var(--text-xl), 4vw, var(--text-3xl));
+}
+
+h3 {
+    font-size: clamp(var(--text-lg), 3vw, var(--text-2xl));
+}
+
+p {
+    margin-bottom: var(--space-4);
+}
+
+a {
+    color: var(--color-neon-cyan);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--color-primary-light);
+}
+
+/* === Form Elements === */
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
 button {
+    cursor: pointer;
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
 }
 
-/* ===================================
-   Global Animations
-   =================================== */
-
-@keyframes float {
-    0%,
-    100% {
-        transform: translate(0, 0) rotate(0deg);
-    }
-
-    33% {
-        transform: translate(30px, -30px) rotate(120deg);
-    }
-
-    66% {
-        transform: translate(-20px, 20px) rotate(240deg);
-    }
+input:focus,
+button:focus,
+select:focus,
+textarea:focus {
+    outline: none;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
+/* === Images === */
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
 }
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+img {
+    height: auto;
 }
 
-@keyframes gradientShift {
-    0%,
-    100% {
-        background-position: 0% 50%;
-    }
+/* === Lists === */
 
-    50% {
-        background-position: 100% 50%;
-    }
+ul,
+ol {
+    list-style: none;
 }
 
-@keyframes successPulse {
-    0% {
-        transform: scale(1);
-    }
+/* === Tables === */
 
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 0 40px rgba(46, 213, 115, 0.6);
-    }
-
-    100% {
-        transform: scale(1);
-    }
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
-@keyframes shake {
-    0%,
-    100% {
-        transform: translateX(0) rotate(0deg);
-    }
+/* === Selection === */
 
-    10%,
-    30%,
-    50%,
-    70%,
-    90% {
-        transform: translateX(-8px) rotate(-1deg);
-    }
-
-    20%,
-    40%,
-    60%,
-    80% {
-        transform: translateX(8px) rotate(1deg);
-    }
+::selection {
+    background: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
-@keyframes successGlow {
-    0%,
-    100% {
-        text-shadow: 0 0 20px rgba(46, 213, 115, 0.5);
-    }
+/* === Scrollbar (Webkit) === */
 
-    50% {
-        text-shadow: 0 0 30px rgba(46, 213, 115, 0.8);
-    }
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-light);
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) var(--color-bg-secondary);
 }
 
 /* ===================================
-   Accessibility & Performance
+   Accessibility
    =================================== */
 
 /* Reduced motion support */
@@ -202,36 +164,86 @@ button {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
-    }
-
-    body::before {
-        animation: none;
-    }
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-    .choice-btn,
-    .btn,
-    .difficulty-btn {
-        border-width: 2px;
+        scroll-behavior: auto !important;
     }
 }
 
 /* Focus visible for keyboard navigation */
-.choice-btn:focus-visible,
-.btn:focus-visible,
-.difficulty-btn:focus-visible,
-.hint-btn:focus-visible,
-.submit-btn:focus-visible,
-.hero-input:focus-visible {
-    outline: 3px solid var(--color-accent-primary);
+:focus-visible {
+    outline: 2px solid var(--color-neon-cyan);
     outline-offset: 2px;
 }
 
-/* Loading state */
-.loading {
-    opacity: 0.6;
-    pointer-events: none;
-    cursor: wait;
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --color-border: rgba(255, 255, 255, 0.5);
+    }
+
+    button,
+    input {
+        border-width: 2px;
+    }
+}
+
+/* Screen reader only content */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Skip link for keyboard navigation */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-primary);
+    color: var(--color-text-primary);
+    padding: var(--space-2) var(--space-4);
+    z-index: var(--z-tooltip);
+    transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* ===================================
+   Utility Classes
+   =================================== */
+
+.hidden {
+    display: none !important;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, var(--color-neon-cyan), var(--color-primary), var(--color-accent));
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.glow-text {
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+}
+
+.neon-border {
+    border: 1px solid var(--color-border-glow);
+    box-shadow: var(--glow-cyan);
 }

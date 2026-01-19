@@ -1,0 +1,143 @@
+/* ===================================
+   CSS Design Tokens - Esports Theme
+   =================================== */
+
+:root {
+    /* === Color Palette === */
+
+    /* Primary Colors */
+    --color-primary: #7C3AED;
+    --color-primary-light: #A78BFA;
+    --color-primary-dark: #5B21B6;
+
+    /* Accent Colors */
+    --color-accent: #F43F5E;
+    --color-accent-light: #FB7185;
+    --color-accent-dark: #BE123C;
+
+    /* Neon Colors */
+    --color-neon-cyan: #00FFFF;
+    --color-neon-green: #39FF14;
+    --color-neon-pink: #FF00FF;
+    --color-neon-blue: #0080FF;
+
+    /* Background Colors */
+    --color-bg-primary: #0F0F23;
+    --color-bg-secondary: #1A1A2E;
+    --color-bg-tertiary: #16213E;
+    --color-bg-card: rgba(26, 26, 46, 0.8);
+
+    /* Text Colors */
+    --color-text-primary: #E2E8F0;
+    --color-text-secondary: #94A3B8;
+    --color-text-muted: #64748B;
+
+    /* State Colors */
+    --color-success: #39FF14;
+    --color-error: #FF4757;
+    --color-warning: #FBBF24;
+
+    /* Border Colors */
+    --color-border: rgba(124, 58, 237, 0.3);
+    --color-border-glow: rgba(0, 255, 255, 0.3);
+
+    /* === Typography === */
+    --font-display: 'Russo One', sans-serif;
+    --font-body: 'Chakra Petch', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Font Sizes */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+    --text-5xl: 3rem;
+
+    /* Font Weights */
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+
+    /* === Spacing === */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+
+    /* === Border Radius === */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 24px;
+
+    /* Angular/Clipped corners for esports feel */
+    --clip-corner: polygon(
+        0 0,
+        calc(100% - 12px) 0,
+        100% 12px,
+        100% 100%,
+        12px 100%,
+        0 calc(100% - 12px)
+    );
+
+    --clip-corner-sm: polygon(
+        0 0,
+        calc(100% - 8px) 0,
+        100% 8px,
+        100% 100%,
+        8px 100%,
+        0 calc(100% - 8px)
+    );
+
+    /* === Shadows === */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+
+    /* Glow Shadows */
+    --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.5), 0 0 40px rgba(0, 255, 255, 0.2);
+    --glow-purple: 0 0 20px rgba(124, 58, 237, 0.5), 0 0 40px rgba(124, 58, 237, 0.2);
+    --glow-green: 0 0 20px rgba(57, 255, 20, 0.5), 0 0 40px rgba(57, 255, 20, 0.2);
+    --glow-red: 0 0 20px rgba(255, 71, 87, 0.5), 0 0 40px rgba(255, 71, 87, 0.2);
+    --glow-pink: 0 0 20px rgba(244, 63, 94, 0.5), 0 0 40px rgba(244, 63, 94, 0.2);
+
+    /* === Transitions === */
+    --transition-fast: 150ms ease;
+    --transition-base: 250ms ease;
+    --transition-slow: 400ms ease;
+    --transition-bounce: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* === Z-Index Scale === */
+    --z-base: 1;
+    --z-dropdown: 10;
+    --z-sticky: 20;
+    --z-fixed: 30;
+    --z-modal: 40;
+    --z-tooltip: 50;
+
+    /* === Layout === */
+    --header-height: 80px;
+    --footer-height: 60px;
+    --max-width: 1400px;
+    --content-width: 1200px;
+}
+
+/* Dark mode is default for esports theme */
+@media (prefers-color-scheme: light) {
+    :root {
+        /* Keep dark theme regardless of system preference */
+    }
+}

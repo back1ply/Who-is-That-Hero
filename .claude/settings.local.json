@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /b \"F:\\\\Shehab Projects\\\\Who-is-That-Hero\\\\css\")",
+      "Bash(dir /b \"F:\\\\Shehab Projects\\\\Who-is-That-Hero\\\\js\")"
+    ]
+  }
+}

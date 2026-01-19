@@ -4,70 +4,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Who is That Dota 2 Hero?</title>
+    <meta name="description" content="Test your Dota 2 knowledge! Identify heroes from their silhouettes in this esports-style quiz game.">
+    <meta name="theme-color" content="#0F0F23">
+    <title>Who is That Hero? | Dota 2 Quiz</title>
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Russo+One&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <!-- CSS Files -->
+    <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/effects.css">
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <h1>🎮 Who is That Dota 2 Hero?</h1>
-
-            <div class="difficulty-selector">
-                <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
-                <button class="difficulty-btn" data-difficulty="medium">Medium</button>
-                <button class="difficulty-btn" data-difficulty="medium-hard">Medium Hard</button>
-                <button class="difficulty-btn" data-difficulty="hard">Hard</button>
-            </div>
-
-            <div class="score-board">
-                <div class="score-item">Score: <span id="score">0</span></div>
-                <div class="score-item">Round: <span id="round">1</span></div>
-                <div class="score-item">Streak: <span id="streak">0</span></div>
+    <div class="app">
+        <!-- Header (HUD Style) -->
+        <header class="header">
+            <div class="header__content">
+                <div class="header__brand">
+                    <svg class="header__logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="40" height="40" rx="8" fill="url(#logo-gradient)"/>
+                        <path d="M12 28V12h4l4 10 4-10h4v16h-3V17l-3.5 9h-3L15 17v11h-3z" fill="#fff"/>
+                        <defs>
+                            <linearGradient id="logo-gradient" x1="0" y1="0" x2="40" y2="40">
+                                <stop stop-color="#7C3AED"/>
+                                <stop offset="1" stop-color="#00FFFF"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <h1 class="header__title">Who is That Hero?</h1>
+                </div>
+                <div class="header__stats">
+                    <div class="stat-badge stat-badge--highlight">
+                        <span class="stat-badge__label">Score</span>
+                        <span class="stat-badge__value" id="score">0</span>
+                    </div>
+                    <div class="stat-badge">
+                        <span class="stat-badge__label">Streak</span>
+                        <span class="stat-badge__value" id="streak">0</span>
+                    </div>
+                </div>
             </div>
         </header>
 
-        <div class="game-area">
-            <div class="image-container">
-                <img id="heroImage" class="hero-image hidden" src="" alt="Mystery Hero">
-                <div id="imageError" class="error-message" style="display: none;"></div>
-            </div>
+        <!-- Main Game Area -->
+        <main class="main">
+            <div class="game">
+                <!-- Left Column: Hero Image -->
+                <div class="game__left">
+                    <div class="hero-frame scanlines">
+                        <img id="heroImage" class="hero-frame__image hero-frame__image--hidden" src="" alt="Mystery Hero">
+                        <div class="hero-frame__corner hero-frame__corner--tl"></div>
+                        <div class="hero-frame__corner hero-frame__corner--tr"></div>
+                        <div class="hero-frame__corner hero-frame__corner--bl"></div>
+                        <div class="hero-frame__corner hero-frame__corner--br"></div>
+                    </div>
+                    <div id="imageError" class="error-message hidden"></div>
 
-            <div class="feedback" id="feedback"></div>
+                    <!-- Feedback Area -->
+                    <div class="feedback-area">
+                        <div id="feedback" class="feedback"></div>
+                    </div>
+                </div>
 
-            <div class="hint-container">
-                <button class="hint-btn" id="hintBtn">💡 Get Hint</button>
-                <div id="hintText" style="display: none;"></div>
-            </div>
+                <!-- Right Column: Controls -->
+                <div class="game__right">
+                    <!-- Difficulty Panel -->
+                    <div class="control-panel">
+                        <div class="control-panel__header">
+                            <h3 class="control-panel__title">Difficulty</h3>
+                        </div>
+                        <div class="difficulty-selector" role="group" aria-label="Difficulty selection">
+                            <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
+                            <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+                            <button class="difficulty-btn" data-difficulty="medium-hard">Med-Hard</button>
+                            <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+                        </div>
+                    </div>
 
-            <div class="choices-container" id="choices"></div>
+                    <!-- Hint Panel -->
+                    <div class="hint-panel">
+                        <div class="control-panel__header">
+                            <h3 class="control-panel__title">Intel</h3>
+                            <button class="hint-btn" id="hintBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                                Get Hint
+                            </button>
+                        </div>
+                        <div class="hint-panel__content">
+                            <div id="hintText" class="hint-panel__text hidden"></div>
+                        </div>
+                    </div>
 
-            <div class="text-input-container" id="textInputContainer" style="display: none;">
-                <div class="text-input-wrapper">
-                    <input type="text" id="heroInput" class="hero-input" placeholder="Type hero name..."
-                        autocomplete="off">
-                    <button class="submit-btn" id="submitBtn">Submit</button>
+                    <!-- Answer Section -->
+                    <div class="answer-section">
+                        <div class="control-panel__header">
+                            <h3 class="control-panel__title">Identify</h3>
+                        </div>
+
+                        <!-- Multiple Choice (Easy/Medium/Medium-Hard) -->
+                        <div id="choicesContainer" class="choices-grid"></div>
+
+                        <!-- Text Input (Hard Mode) -->
+                        <div id="textInputContainer" class="text-input-section hidden">
+                            <div class="input-group">
+                                <input
+                                    type="text"
+                                    id="heroInput"
+                                    class="input"
+                                    placeholder="Type hero name..."
+                                    autocomplete="off"
+                                    aria-label="Hero name input"
+                                >
+                                <button class="btn" id="submitBtn">Submit</button>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="actions" style="margin-top: var(--space-4);">
+                            <button class="btn btn--outline" id="revealBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                Reveal
+                            </button>
+                            <button class="btn btn--accent hidden" id="nextBtn">
+                                Next Hero
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </main>
 
-            <div class="controls">
-                <button class="btn" id="revealBtn">Reveal Answer</button>
-                <button class="btn" id="nextBtn" style="display: none;">Next Hero</button>
+        <!-- Footer Stats Bar -->
+        <footer class="footer">
+            <div class="footer__content">
+                <div class="footer__stat">
+                    <span>Round:</span>
+                    <span class="footer__stat-value" id="round">1</span>
+                    <span>/ 123</span>
+                </div>
+                <div class="footer__stat">
+                    <span>High Score:</span>
+                    <span class="footer__stat-value" id="highScore">0</span>
+                </div>
+                <div class="footer__stat">
+                    <span>Accuracy:</span>
+                    <span class="footer__stat-value" id="accuracy">0%</span>
+                </div>
             </div>
-        </div>
+        </footer>
     </div>
 
     <!-- JavaScript Files -->
+    <script src="js/config.js"></script>
     <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/state.js"></script>
     <script src="js/game.js"></script>
     <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,493 @@
+/* ===================================
+   Effects & Animations - Esports Theme
+   =================================== */
+
+/* ===================================
+   Keyframe Animations
+   =================================== */
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse-success {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: var(--glow-green);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow:
+            var(--glow-green),
+            0 0 40px rgba(57, 255, 20, 0.4);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+@keyframes glow-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-in-right {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slide-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes border-glow {
+    0%, 100% {
+        border-color: var(--color-neon-cyan);
+        box-shadow: var(--glow-cyan);
+    }
+    50% {
+        border-color: var(--color-primary);
+        box-shadow: var(--glow-purple);
+    }
+}
+
+@keyframes text-glow {
+    0%, 100% {
+        text-shadow: 0 0 10px var(--color-neon-cyan), 0 0 20px var(--color-neon-cyan);
+    }
+    50% {
+        text-shadow: 0 0 20px var(--color-neon-cyan), 0 0 40px var(--color-neon-cyan);
+    }
+}
+
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes scanline {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+@keyframes flicker {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    75% {
+        opacity: 0.9;
+    }
+}
+
+@keyframes glitch {
+    0%, 100% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-2px, 2px);
+    }
+    40% {
+        transform: translate(-2px, -2px);
+    }
+    60% {
+        transform: translate(2px, 2px);
+    }
+    80% {
+        transform: translate(2px, -2px);
+    }
+}
+
+/* ===================================
+   Animation Classes
+   =================================== */
+
+.animate-fade-in {
+    animation: fade-in 0.3s ease forwards;
+}
+
+.animate-fade-in-up {
+    animation: fade-in-up 0.4s ease forwards;
+}
+
+.animate-slide-in-right {
+    animation: slide-in-right 0.3s ease forwards;
+}
+
+.animate-slide-in-left {
+    animation: slide-in-left 0.3s ease forwards;
+}
+
+.animate-scale-in {
+    animation: scale-in 0.3s ease forwards;
+}
+
+.animate-pulse {
+    animation: glow-pulse 2s ease infinite;
+}
+
+.animate-glow {
+    animation: border-glow 3s ease infinite;
+}
+
+.animate-text-glow {
+    animation: text-glow 2s ease infinite;
+}
+
+.animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease infinite;
+}
+
+.animate-flicker {
+    animation: flicker 4s linear infinite;
+}
+
+/* ===================================
+   Scanline Effect
+   =================================== */
+
+.scanlines {
+    position: relative;
+    overflow: hidden;
+}
+
+.scanlines::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.15) 2px,
+        rgba(0, 0, 0, 0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Moving scanline */
+.scanlines--animated::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(0, 255, 255, 0.3),
+        transparent
+    );
+    animation: scanline 8s linear infinite;
+    pointer-events: none;
+    z-index: 11;
+}
+
+/* ===================================
+   Glitch Effect
+   =================================== */
+
+.glitch {
+    position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+}
+
+.glitch::before {
+    color: var(--color-neon-cyan);
+    animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    transform: translate(-2px, -2px);
+}
+
+.glitch::after {
+    color: var(--color-accent);
+    animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse infinite;
+    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+    transform: translate(2px, 2px);
+}
+
+/* ===================================
+   Neon Effects
+   =================================== */
+
+.neon-text {
+    color: var(--color-neon-cyan);
+    text-shadow:
+        0 0 5px var(--color-neon-cyan),
+        0 0 10px var(--color-neon-cyan),
+        0 0 20px var(--color-neon-cyan),
+        0 0 40px var(--color-neon-cyan);
+}
+
+.neon-text--pink {
+    color: var(--color-accent);
+    text-shadow:
+        0 0 5px var(--color-accent),
+        0 0 10px var(--color-accent),
+        0 0 20px var(--color-accent),
+        0 0 40px var(--color-accent);
+}
+
+.neon-text--green {
+    color: var(--color-neon-green);
+    text-shadow:
+        0 0 5px var(--color-neon-green),
+        0 0 10px var(--color-neon-green),
+        0 0 20px var(--color-neon-green),
+        0 0 40px var(--color-neon-green);
+}
+
+.neon-box {
+    border: 1px solid var(--color-neon-cyan);
+    box-shadow:
+        inset 0 0 10px rgba(0, 255, 255, 0.1),
+        0 0 10px rgba(0, 255, 255, 0.3),
+        0 0 20px rgba(0, 255, 255, 0.2),
+        0 0 40px rgba(0, 255, 255, 0.1);
+}
+
+.neon-box--pink {
+    border-color: var(--color-accent);
+    box-shadow:
+        inset 0 0 10px rgba(244, 63, 94, 0.1),
+        0 0 10px rgba(244, 63, 94, 0.3),
+        0 0 20px rgba(244, 63, 94, 0.2),
+        0 0 40px rgba(244, 63, 94, 0.1);
+}
+
+/* ===================================
+   HUD Corner Decorations
+   =================================== */
+
+.hud-corners {
+    position: relative;
+}
+
+.hud-corners::before,
+.hud-corners::after,
+.hud-corners > .hud-corner-bl,
+.hud-corners > .hud-corner-br {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-neon-cyan);
+    pointer-events: none;
+}
+
+.hud-corners::before {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+}
+
+.hud-corners::after {
+    top: 0;
+    right: 0;
+    border-left: none;
+    border-bottom: none;
+}
+
+.hud-corner-bl {
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: none;
+}
+
+.hud-corner-br {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+}
+
+/* ===================================
+   Gradient Text
+   =================================== */
+
+.gradient-text {
+    background: linear-gradient(
+        135deg,
+        var(--color-neon-cyan),
+        var(--color-primary),
+        var(--color-accent)
+    );
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-shift 5s ease infinite;
+}
+
+/* ===================================
+   Loading Effects
+   =================================== */
+
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--color-bg-secondary) 25%,
+        var(--color-bg-tertiary) 50%,
+        var(--color-bg-secondary) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ===================================
+   Hover Effects
+   =================================== */
+
+.hover-lift {
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.hover-glow {
+    transition: box-shadow var(--transition-base);
+}
+
+.hover-glow:hover {
+    box-shadow: var(--glow-cyan);
+}
+
+.hover-scale {
+    transition: transform var(--transition-base);
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+/* ===================================
+   Transition Utilities
+   =================================== */
+
+.transition-colors {
+    transition-property: color, background-color, border-color;
+    transition-duration: 150ms;
+    transition-timing-function: ease;
+}
+
+.transition-opacity {
+    transition-property: opacity;
+    transition-duration: 150ms;
+    transition-timing-function: ease;
+}
+
+.transition-transform {
+    transition-property: transform;
+    transition-duration: 150ms;
+    transition-timing-function: ease;
+}
+
+.transition-all {
+    transition-property: all;
+    transition-duration: 250ms;
+    transition-timing-function: ease;
+}

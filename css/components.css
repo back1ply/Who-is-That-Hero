@@ -401,16 +401,18 @@
     transition: filter var(--transition-slow);
 }
 
-.hero-frame__image--hidden {
-    filter: brightness(0) contrast(1.5);
+/* Easy: Inner details visible - outline style with some internal structure */
+.hero-frame__image--silhouette-detailed {
+    filter: brightness(0.12) saturate(0) contrast(3) !important;
 }
 
-.hero-frame__image--silhouette {
-    filter: brightness(0) saturate(0) contrast(100);
+/* Medium/Hard: Solid black fill - drop-shadows fill in gaps */
+.hero-frame__image--silhouette-solid {
+    filter: brightness(0) drop-shadow(0 0 1px black) drop-shadow(0 0 1px black) drop-shadow(0 0 2px black) !important;
 }
 
 .hero-frame__image--revealed {
-    filter: none;
+    filter: none !important;
 }
 
 /* Scanline overlay */
@@ -505,4 +507,177 @@
     border-top-color: var(--color-neon-cyan);
     border-radius: 50%;
     animation: spin 1s linear infinite;
+}
+
+/* ===================================
+   Settings Menu (Dropdown)
+   =================================== */
+
+.settings-menu {
+    position: relative;
+}
+
+.settings-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.settings-btn:hover {
+    color: var(--color-neon-cyan);
+    border-color: var(--color-neon-cyan);
+    box-shadow: var(--glow-cyan);
+}
+
+.settings-dropdown {
+    position: absolute;
+    top: calc(100% + var(--space-2));
+    right: 0;
+    min-width: 160px;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: var(--z-dropdown);
+    overflow: hidden;
+}
+
+.settings-dropdown__header {
+    padding: var(--space-2) var(--space-3);
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.settings-dropdown__options {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-option {
+    padding: var(--space-2) var(--space-3);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.settings-option:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text-primary);
+}
+
+.settings-option.active {
+    color: var(--color-neon-cyan);
+    background: rgba(0, 255, 255, 0.1);
+}
+
+/* ===================================
+   Inline Hint
+   =================================== */
+
+.hint-inline {
+    margin-top: var(--space-3);
+    animation: fade-in 0.2s ease;
+}
+
+.hint-inline__text {
+    background: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-3);
+    color: var(--color-warning);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+    .hint-inline__text {
+        font-size: var(--text-xs);
+        padding: var(--space-2);
+    }
+}
+
+/* ===================================
+   Mobile Choice Button Styling
+   =================================== */
+
+@media (max-width: 768px) {
+    /* Softer choice buttons on mobile */
+    .choice-btn {
+        clip-path: none; /* Remove angular clip for softer look */
+        border-radius: var(--radius-lg);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .choice-btn:hover:not(:disabled) {
+        box-shadow: 0 4px 12px rgba(0, 255, 255, 0.2);
+        transform: translateY(-1px);
+    }
+
+    .choice-btn.correct {
+        box-shadow: 0 4px 16px rgba(57, 255, 20, 0.3);
+    }
+
+    .choice-btn.incorrect {
+        box-shadow: 0 4px 16px rgba(255, 71, 87, 0.3);
+    }
+
+    /* Softer buttons on mobile */
+    .btn {
+        clip-path: none;
+        border-radius: var(--radius-lg);
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    /* Softer stat badges */
+    .stat-badge {
+        border-radius: var(--radius-md);
+    }
+
+    /* Softer hero frame on mobile */
+    .hero-frame {
+        border-radius: 20px;
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-frame:hover {
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+}
+
+@media (max-width: 480px) {
+    /* Even cleaner hero frame on small mobile */
+    .hero-frame {
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .choice-btn {
+        border-radius: 12px;
+    }
+
+    .btn {
+        border-radius: 10px;
+    }
 }

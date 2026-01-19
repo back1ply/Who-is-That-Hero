@@ -49,6 +49,24 @@
                         <span class="stat-badge__value" id="streak">0</span>
                     </div>
                 </div>
+
+                <!-- Settings Menu -->
+                <div class="settings-menu">
+                    <button class="settings-btn" id="settingsBtn" aria-label="Difficulty">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                    </button>
+                    <div class="settings-dropdown hidden" id="settingsDropdown">
+                        <div class="settings-dropdown__header">Difficulty</div>
+                        <div class="settings-dropdown__options">
+                            <button class="settings-option active" data-difficulty="easy">Easy</button>
+                            <button class="settings-option" data-difficulty="medium">Medium</button>
+                            <button class="settings-option" data-difficulty="hard">Hard</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -70,41 +88,22 @@
                     <div class="feedback-area">
                         <div id="feedback" class="feedback"></div>
                     </div>
+
+                    <!-- Inline Stats (Mobile Only - replaces footer) -->
+                    <div class="inline-stats">
+                        <div class="inline-stats__item">
+                            <span>Round</span>
+                            <span class="inline-stats__value" id="roundInline">1</span>
+                        </div>
+                        <div class="inline-stats__item">
+                            <span>Accuracy</span>
+                            <span class="inline-stats__value" id="accuracyInline">0%</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Right Column: Controls -->
                 <div class="game__right">
-                    <!-- Difficulty Panel -->
-                    <div class="control-panel">
-                        <div class="control-panel__header">
-                            <h3 class="control-panel__title">Difficulty</h3>
-                        </div>
-                        <div class="difficulty-selector" role="group" aria-label="Difficulty selection">
-                            <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
-                            <button class="difficulty-btn" data-difficulty="medium">Medium</button>
-                            <button class="difficulty-btn" data-difficulty="medium-hard">Med-Hard</button>
-                            <button class="difficulty-btn" data-difficulty="hard">Hard</button>
-                        </div>
-                    </div>
-
-                    <!-- Hint Panel -->
-                    <div class="hint-panel">
-                        <div class="control-panel__header">
-                            <h3 class="control-panel__title">Intel</h3>
-                            <button class="hint-btn" id="hintBtn">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
-                                </svg>
-                                Get Hint
-                            </button>
-                        </div>
-                        <div class="hint-panel__content">
-                            <div id="hintText" class="hint-panel__text hidden"></div>
-                        </div>
-                    </div>
-
                     <!-- Answer Section -->
                     <div class="answer-section">
                         <div class="control-panel__header">
@@ -129,8 +128,21 @@
                             </div>
                         </div>
 
+                        <!-- Hint (inline, appears when requested) -->
+                        <div id="hintContainer" class="hint-inline hidden">
+                            <div id="hintText" class="hint-inline__text"></div>
+                        </div>
+
                         <!-- Action Buttons -->
-                        <div class="actions" style="margin-top: var(--space-4);">
+                        <div class="actions" style="margin-top: var(--space-3);">
+                            <button class="btn btn--ghost" id="hintBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                                Hint
+                            </button>
                             <button class="btn btn--outline" id="revealBtn">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -139,7 +151,7 @@
                                 Reveal
                             </button>
                             <button class="btn btn--accent hidden" id="nextBtn">
-                                Next Hero
+                                Next
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="9 18 15 12 9 6"/>
                                 </svg>

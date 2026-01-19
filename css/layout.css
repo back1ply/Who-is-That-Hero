@@ -125,15 +125,8 @@ body::before {
 }
 
 /* ===================================
-   Control Panel
+   Control Panel Header (used in answer section)
    =================================== */
-
-.control-panel {
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-5);
-}
 
 .control-panel__header {
     display: flex;
@@ -151,31 +144,6 @@ body::before {
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin: 0;
-}
-
-/* ===================================
-   Hint Panel
-   =================================== */
-
-.hint-panel {
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-5);
-}
-
-.hint-panel__content {
-    min-height: 80px;
-}
-
-.hint-panel__text {
-    background: rgba(251, 191, 36, 0.1);
-    border: 1px solid rgba(251, 191, 36, 0.2);
-    border-radius: var(--radius-md);
-    padding: var(--space-3) var(--space-4);
-    color: var(--color-warning);
-    font-size: var(--text-sm);
-    line-height: 1.6;
 }
 
 /* ===================================
@@ -225,6 +193,32 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* ===================================
+   Inline Stats (Mobile Only)
+   =================================== */
+
+.inline-stats {
+    display: none; /* Hidden on desktop */
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-2) 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+}
+
+.inline-stats__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.inline-stats__value {
+    color: var(--color-neon-cyan);
+    font-family: var(--font-display);
+    font-weight: var(--font-bold);
 }
 
 /* ===================================
@@ -296,16 +290,32 @@ body::before {
 }
 
 /* ===================================
-   Responsive - Mobile
+   Responsive - Mobile (Tablet/Large Mobile)
    =================================== */
 
 @media (max-width: 768px) {
     .header {
-        padding: var(--space-3) var(--space-4);
+        padding: var(--space-2) var(--space-4);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: var(--z-fixed);
+        background: rgba(15, 15, 35, 0.9);
+        backdrop-filter: blur(8px);
+    }
+
+    .header__content {
+        flex-wrap: nowrap;
+    }
+
+    .header__brand {
+        width: auto;
+        margin-bottom: 0;
     }
 
     .header__title {
-        font-size: var(--text-lg);
+        font-size: var(--text-sm);
     }
 
     .header__stats {
@@ -314,100 +324,443 @@ body::before {
 
     .main {
         padding: var(--space-4);
+        padding-top: 64px; /* Smaller header offset */
+        padding-bottom: var(--space-4);
     }
 
     .game {
-        gap: var(--space-4);
+        gap: var(--space-2);
     }
 
+    /* LARGER hero image on tablet/large mobile */
     .hero-frame {
-        max-width: 350px;
+        max-width: 300px;
+        margin: 0 auto;
     }
 
-    .control-panel,
-    .hint-panel,
+    .game__left {
+        gap: var(--space-2);
+    }
+
+    /* Feedback */
+    .feedback-area {
+        min-height: 32px;
+    }
+
+    .feedback {
+        font-size: var(--text-base);
+    }
+
+    /* Lighter answer section - less boxy */
     .answer-section {
-        padding: var(--space-4);
+        padding: var(--space-3);
+        background: rgba(30, 30, 60, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
     }
 
+    .control-panel__header {
+        margin-bottom: var(--space-2);
+        padding-bottom: var(--space-2);
+    }
+
+    /* Hide section header on mobile */
+    .answer-section .control-panel__header {
+        display: none;
+    }
+
+    /* 2x2 grid with LARGER buttons */
     .choices-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .choice-btn {
+        padding: var(--space-3);
+        min-height: 56px;
+        font-size: var(--text-base);
+        border-radius: 14px;
     }
 
     .actions {
-        flex-direction: column;
+        flex-direction: row;
+        gap: var(--space-2);
+        margin-top: var(--space-2) !important;
     }
 
     .actions .btn {
-        width: 100%;
+        flex: 1;
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--text-sm);
     }
 
-    .footer__content {
-        flex-wrap: wrap;
+    /* Hide fixed footer on mobile - replaced by inline stats */
+    .footer {
+        display: none;
+    }
+
+    /* Inline stats (visible on mobile only) */
+    .inline-stats {
+        display: flex;
+        justify-content: center;
         gap: var(--space-4);
+        padding: var(--space-1) 0;
+        font-size: var(--text-sm);
+        color: var(--color-text-secondary);
+    }
+
+    .inline-stats__item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-1);
+    }
+
+    .inline-stats__value {
+        color: var(--color-neon-cyan);
+        font-family: var(--font-display);
+        font-weight: var(--font-bold);
     }
 
     .stat-badge {
-        padding: var(--space-1) var(--space-3);
+        padding: var(--space-1) var(--space-2);
         font-size: var(--text-xs);
     }
 
     .stat-badge__value {
-        font-size: var(--text-base);
+        font-size: var(--text-sm);
+    }
+
+    /* Compact difficulty selector */
+    .difficulty-selector {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .difficulty-btn {
+        padding: var(--space-1) var(--space-2);
+        font-size: var(--text-xs);
+        min-width: auto;
+    }
+
+    /* Hide HUD corner decorations on mobile */
+    .hero-frame__corner {
+        display: none;
+    }
+
+    /* Hide scanline effect on mobile for cleaner look */
+    .hero-frame::after {
+        display: none;
     }
 }
 
 /* ===================================
-   Responsive - Small Mobile
+   Responsive - Small Mobile (480px)
    =================================== */
 
 @media (max-width: 480px) {
-    .header__brand {
-        gap: var(--space-2);
+    /* Ultra-minimal header - just score and settings */
+    .header {
+        padding: var(--space-2) var(--space-3);
+        background: transparent;
+        backdrop-filter: none;
+        border-bottom: none;
     }
 
+    .header__content {
+        justify-content: space-between;
+    }
+
+    .header__brand {
+        gap: var(--space-2);
+        width: auto;
+        margin-bottom: 0;
+    }
+
+    /* Hide logo and title on small mobile - cleaner look */
     .header__logo {
-        width: 32px;
-        height: 32px;
+        width: 24px;
+        height: 24px;
     }
 
     .header__title {
-        font-size: var(--text-base);
+        display: none;
+    }
+
+    /* Hide streak badge on small mobile - keep score only */
+    .header__stats .stat-badge:not(.stat-badge--highlight) {
+        display: none;
+    }
+
+    /* Minimal score badge */
+    .header__stats .stat-badge--highlight {
+        background: rgba(15, 15, 35, 0.8);
+        backdrop-filter: blur(8px);
     }
 
     .main {
         padding: var(--space-3);
+        padding-top: 56px; /* Smaller header offset */
+        padding-bottom: var(--space-3);
     }
 
+    .game {
+        gap: var(--space-2);
+    }
+
+    .game__left {
+        gap: var(--space-1);
+    }
+
+    /* LARGER hero image (280px instead of 180px) */
     .hero-frame {
-        max-width: 300px;
+        max-width: 280px;
     }
 
-    .control-panel,
-    .hint-panel,
+    /* Feedback */
+    .feedback-area {
+        min-height: 28px;
+    }
+
+    .feedback {
+        font-size: var(--text-sm);
+    }
+
+    /* Inline stats tighter */
+    .inline-stats {
+        padding: 0;
+    }
+
+    /* REMOVE the box - seamless answer section */
     .answer-section {
+        padding: 0;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+    }
+
+    /* 2x2 grid with LARGER buttons (56-60px height) */
+    .choices-grid {
+        gap: 10px;
+    }
+
+    .choice-btn {
         padding: var(--space-3);
+        min-height: 54px;
+        font-size: var(--text-sm);
+        border-radius: 12px;
     }
 
-    .difficulty-selector {
-        width: 100%;
-        justify-content: space-between;
+    .actions {
+        margin-top: var(--space-2) !important;
+        gap: var(--space-2);
     }
 
-    .difficulty-btn {
-        padding: var(--space-2) var(--space-2);
+    .actions .btn {
+        padding: var(--space-2) var(--space-3);
         font-size: var(--text-xs);
     }
 
-    .footer {
-        padding: var(--space-3) var(--space-4);
-    }
-
-    .footer__content {
+    /* Inline stats styling for small mobile */
+    .inline-stats {
+        font-size: var(--text-xs);
         gap: var(--space-3);
     }
 
-    .footer__stat {
+    /* Difficulty buttons */
+    .difficulty-btn {
+        padding: var(--space-1) var(--space-2);
+        font-size: var(--text-xs);
+    }
+
+    .stat-badge {
+        padding: var(--space-1) var(--space-2);
+    }
+
+    .stat-badge__label {
+        font-size: 0.65rem;
+    }
+
+    .stat-badge__value {
+        font-size: var(--text-sm);
+    }
+
+    /* Settings button smaller */
+    .settings-btn {
+        width: 32px;
+        height: 32px;
+        background: rgba(15, 15, 35, 0.8);
+        backdrop-filter: blur(8px);
+    }
+}
+
+/* ===================================
+   Responsive - Very Small Mobile (375px and below)
+   =================================== */
+
+@media (max-width: 375px) {
+    .header {
+        padding: var(--space-1) var(--space-2);
+    }
+
+    /* Hide logo entirely on very small screens */
+    .header__logo {
+        display: none;
+    }
+
+    .main {
+        padding: var(--space-2);
+        padding-top: 44px;
+    }
+
+    .game {
+        gap: 6px;
+    }
+
+    .game__left {
+        gap: 4px;
+    }
+
+    /* Slightly smaller hero but still prominent */
+    .hero-frame {
+        max-width: 220px;
+    }
+
+    /* Maintain usable button sizes */
+    .choice-btn {
+        min-height: 50px;
+        font-size: var(--text-xs);
+        padding: var(--space-2);
+    }
+
+    .choices-grid {
+        gap: 8px;
+    }
+
+    .actions {
+        margin-top: var(--space-2) !important;
+    }
+
+    .actions .btn {
+        font-size: var(--text-xs);
+        padding: var(--space-2);
+    }
+
+    .inline-stats {
+        padding: 0;
+    }
+
+    .feedback-area {
+        min-height: 28px;
+    }
+
+    .feedback {
+        font-size: var(--text-xs);
+    }
+
+    .settings-btn {
+        width: 28px;
+        height: 28px;
+    }
+
+    .stat-badge {
+        padding: 4px 8px;
+    }
+
+    .stat-badge__label {
+        display: none; /* Just show the number */
+    }
+
+    .stat-badge__value {
+        font-size: var(--text-sm);
+    }
+}
+
+/* ===================================
+   Mobile Landscape Mode
+   =================================== */
+
+@media (max-width: 896px) and (orientation: landscape) {
+    .header {
+        padding: var(--space-1) var(--space-3);
+    }
+
+    .header__title {
+        font-size: var(--text-sm);
+    }
+
+    .main {
+        padding: var(--space-2) var(--space-4);
+        padding-top: 50px;
+        padding-bottom: var(--space-2);
+    }
+
+    /* Side-by-side layout in landscape */
+    .game {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: var(--space-4);
+        align-items: start;
+    }
+
+    .game__left {
+        gap: var(--space-2);
+    }
+
+    .game__right {
+        gap: var(--space-2);
+    }
+
+    .hero-frame {
+        max-width: 200px;
+    }
+
+    /* Hide corners in landscape too */
+    .hero-frame__corner {
+        display: none;
+    }
+
+    .feedback-area {
+        min-height: 24px;
+    }
+
+    .feedback {
+        font-size: var(--text-sm);
+    }
+
+    /* Answer section in landscape */
+    .answer-section {
+        padding: var(--space-3);
+        border-radius: var(--radius-lg);
+    }
+
+    .answer-section .control-panel__header {
+        display: none;
+    }
+
+    .choices-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-2);
+    }
+
+    .choice-btn {
+        min-height: 44px;
+        padding: var(--space-2);
+        font-size: var(--text-sm);
+        border-radius: var(--radius-md);
+    }
+
+    .actions {
+        margin-top: var(--space-2) !important;
+    }
+
+    /* Hide footer in landscape too */
+    .footer {
+        display: none;
+    }
+
+    /* Show inline stats in landscape */
+    .inline-stats {
+        display: flex;
         font-size: var(--text-xs);
     }
 }

@@ -153,13 +153,12 @@ const Game = {
     getImageClass(difficulty) {
         switch (difficulty) {
             case 'easy':
-                return 'hero-frame__image--hidden';
+                return 'hero-frame__image--silhouette-detailed';
             case 'medium':
-            case 'medium-hard':
             case 'hard':
-                return 'hero-frame__image--silhouette';
+                return 'hero-frame__image--silhouette-solid';
             default:
-                return 'hero-frame__image--hidden';
+                return 'hero-frame__image--silhouette-detailed';
         }
     },
 

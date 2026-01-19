@@ -23,11 +23,16 @@ const UI = {
             highScoreEl: document.getElementById('highScore'),
             accuracyEl: document.getElementById('accuracy'),
 
+            // Inline Stats (Mobile)
+            roundInlineEl: document.getElementById('roundInline'),
+            accuracyInlineEl: document.getElementById('accuracyInline'),
+
             // Feedback
             feedback: document.getElementById('feedback'),
 
             // Hint
             hintBtn: document.getElementById('hintBtn'),
+            hintContainer: document.getElementById('hintContainer'),
             hintText: document.getElementById('hintText'),
 
             // Choices
@@ -42,8 +47,10 @@ const UI = {
             revealBtn: document.getElementById('revealBtn'),
             nextBtn: document.getElementById('nextBtn'),
 
-            // Difficulty
-            difficultyBtns: document.querySelectorAll('.difficulty-btn')
+            // Settings menu
+            settingsBtn: document.getElementById('settingsBtn'),
+            settingsDropdown: document.getElementById('settingsDropdown'),
+            settingsOptions: document.querySelectorAll('.settings-option')
         };
     },
 
@@ -217,7 +224,7 @@ const UI = {
     handleHint() {
         const hint = Game.getHint();
         this.elements.hintText.textContent = hint;
-        this.elements.hintText.classList.remove('hidden');
+        this.elements.hintContainer.classList.remove('hidden');
         this.elements.hintBtn.classList.add('hidden');
     },
 
@@ -226,16 +233,33 @@ const UI = {
      * @param {string} difficulty - New difficulty level
      */
     handleDifficultyChange(difficulty) {
-        // Update button states
-        this.elements.difficultyBtns.forEach(btn => {
+        // Update settings dropdown options
+        this.elements.settingsOptions.forEach(btn => {
             btn.classList.toggle('active', btn.dataset.difficulty === difficulty);
         });
+
+        // Close dropdown
+        this.closeSettingsDropdown();
 
         // Get updated round data
         const roundData = Game.setDifficulty(difficulty);
 
         // Re-render round with new difficulty
         this.renderRound(roundData);
+    },
+
+    /**
+     * Toggle settings dropdown
+     */
+    toggleSettingsDropdown() {
+        this.elements.settingsDropdown.classList.toggle('hidden');
+    },
+
+    /**
+     * Close settings dropdown
+     */
+    closeSettingsDropdown() {
+        this.elements.settingsDropdown.classList.add('hidden');
     },
 
     /**
@@ -287,6 +311,10 @@ const UI = {
         }
         if (stats.round !== undefined) {
             this.elements.roundEl.textContent = stats.round;
+            // Also update inline stats (mobile)
+            if (this.elements.roundInlineEl) {
+                this.elements.roundInlineEl.textContent = stats.round;
+            }
         }
     },
 
@@ -295,7 +323,12 @@ const UI = {
      */
     updatePersistentStats() {
         this.elements.highScoreEl.textContent = Storage.getHighScore();
-        this.elements.accuracyEl.textContent = `${GameState.getAccuracy()}%`;
+        const accuracy = `${GameState.getAccuracy()}%`;
+        this.elements.accuracyEl.textContent = accuracy;
+        // Also update inline stats (mobile)
+        if (this.elements.accuracyInlineEl) {
+            this.elements.accuracyInlineEl.textContent = accuracy;
+        }
     },
 
     /**
@@ -347,10 +380,10 @@ const UI = {
         // Reset buttons
         this.elements.revealBtn.classList.remove('hidden');
         this.elements.nextBtn.classList.add('hidden');
+        this.elements.hintBtn.classList.remove('hidden');
 
         // Reset hint
-        this.elements.hintBtn.classList.remove('hidden');
-        this.elements.hintText.classList.add('hidden');
+        this.elements.hintContainer.classList.add('hidden');
         this.elements.hintText.textContent = '';
     },
 

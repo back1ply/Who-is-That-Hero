@@ -55,11 +55,24 @@ const App = {
             }
         });
 
-        // Difficulty buttons
-        UI.elements.difficultyBtns.forEach(btn => {
+        // Settings button (toggle dropdown)
+        UI.elements.settingsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            UI.toggleSettingsDropdown();
+        });
+
+        // Settings dropdown options
+        UI.elements.settingsOptions.forEach(btn => {
             btn.addEventListener('click', () => {
                 UI.handleDifficultyChange(btn.dataset.difficulty);
             });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.settings-menu')) {
+                UI.closeSettingsDropdown();
+            }
         });
 
         // Keyboard shortcuts
